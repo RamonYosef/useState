@@ -1,42 +1,54 @@
 import { useState } from "react";
 import { Container } from "./style";
 
-import Button from "@mui/material/Button";
+interface Item {
+  name: string | undefined;
+}
 
 export const Cont: React.FC = () => {
-  const [n1, setN1] = useState(0);
- 
+  const [myArray, setMyArray] = useState<Item[]>([]);
+  const [data, setData] = useState<string>();
 
-  const subtrair = () => {
-    setN1(n1 - 1);
+  const add = (e: any) => {
+    e.preventDefault();
 
-    if(n1 <= 0)
-    {
-        setN1(0)
-    }
+    setMyArray([
+      ...myArray,
+      {
+        name: data
+      },
+    ]);
+
+    setData('');
+    e.target.reset();
   };
 
-  const adicionar = () => {
-    setN1(n1 + 1);
-  };
+  console.log(data);
 
-  const num = (e:any) => {
-     let n = e.target.value
-    setN1(n + n1);
-  };
+  if (myArray?.length >= 5) {
+    <>vc passou do limite, meu chapa</>;
+  }
 
   return (
     <Container>
-      <h1>{n1}</h1>
-      <ul>
-        <li><Button variant="contained" color="success" onClick={adicionar}> + </Button></li>
-        <li><Button variant="contained" color="error" onClick={subtrair}> -</Button></li>
-      </ul>
-      <br />
-      <li><Button variant="contained" color="success" onClick={num} value={'1'}> 1 </Button></li>
-      <li><Button variant="contained" color="success" onClick={num} value={'2'}> 2 </Button></li>
-     
-      
+      <form onSubmit={add}>
+        <input
+          type="text"
+          placeholder="digite seu nome"
+          name="nome"
+          defaultValue={data}
+          onChange={(ev) => {
+            setData(ev.target.value);
+          }}
+        />
+        <button type="submit">adicionar</button>
+      </form>
+
+      <div>
+        {myArray?.map((item, index) => (
+          <div key={"listItems" + index}>{item.name}</div>
+        ))}
+      </div>
     </Container>
   );
 };
